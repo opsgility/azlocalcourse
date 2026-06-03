@@ -382,7 +382,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
 
    |Setting|Value|
    |---|---|
-   |Resource group|**ALClus-<username>**|
+   |Resource group|**ALClus-`<username>`**|
    |Instance name|**ALClus`<xx>`**|
    |Region|**(Asia Pacific) SouthEast Asia**|
    |Cluster options|**Standard**|
