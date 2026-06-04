@@ -38,7 +38,7 @@ You will create a virtual switch in the DC VM in order to be able to create mult
 
    > **Note:**: You'll be running all tasks in this lab from the MSLab-Mgmt VM.
 
-### Task01: Set up virtual networking
+### Task 01: Set up virtual networking
 
 1. Start Windows PowerShell ISE and run the following code:
 
@@ -173,7 +173,7 @@ You will create a virtual switch in the DC VM in order to be able to create mult
    $ClusterName="ALClus<xx>"
    $ClusterNodes=(Get-ClusterNode -Cluster $ClusterName).Name
    $VirtualSwitchName=(Get-VMSwitch -CimSession $ClusterNodes[0]).Name
-   $Location="EastUS"
+   $Location="SouthEastAsia"
    $ResourceGroupName="ALClus-aluser<xx>"
    $CustomLocationID=(Get-AzCustomLocation -ResourceGroupName $ResourceGroupName).ID
 
@@ -432,7 +432,7 @@ You will create a virtual switch in the DC VM in order to be able to create mult
 
 1. Start Microsoft Edge and navigate to [the Azure portal](https://portal.azure.com). Sign in by using the credentials granting you access to the Azure subscription.
 1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab.
-1. On the **ALClus01** page, in the left navigation menu, expand the **Resources** section and select the **Logical networks** entry.
-1. On the **ALClus01 \| Logical networks** page, verify that all logical networks are listed with the **Succeeded** status.
+1. In the left navigation menu, expand the **Resources** section and select the **Logical networks** entry.
+1. On the **Logical networks** page, verify that all logical networks are listed with the **Succeeded** status.
 
    ![](./media/0202-07-logicalnetworks.png)

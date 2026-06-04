@@ -23,7 +23,7 @@ In this lab you will learn about the use BitLocker to protect Azure Local storag
 
    > **Note:**: You'll be running all tasks in this lab from the MSLab-Mgmt VM.
 
-### Task01: Review standard BitLocker cmdlets
+### Task 01: Review standard BitLocker cmdlets
 
 1. In the Virtual Machine Connection to MSLab-Mgmt VM, launch Windows PowerShell ISE and run the following code to list standard BitLocker cmdlets:
 
@@ -89,7 +89,7 @@ In this lab you will learn about the use BitLocker to protect Azure Local storag
 
    > **Note:** Encrypting volumes adds another level of complexity. This is documented in the MSLab scenario [Enabling BitLocker on S2D cluster](https://github.com/microsoft/MSLab/tree/master/Scenarios/BitLocker%20on%20S2D%20cluster). Fortunately this can be avoided because Azure Local has its own set of BitLocker cmdlets.
 
-### Task02: Explore Azure Local BitLocker cmdlets
+### Task 02: Explore Azure Local BitLocker cmdlets
 
 1. From the Administrator: Windows PowerShell ISE window, run the following code to review the Azure Local BitLocker cmdlets:
 
@@ -136,7 +136,7 @@ In this lab you will learn about the use BitLocker to protect Azure Local storag
 
    ![](./media/0301-06-getasbitlockervolume.png)
 
-### Task03: Retrieve BitLocker recovery keys from cluster nodes
+### Task 03: Retrieve BitLocker recovery keys from cluster nodes
 
 > **Note:** One of the challenges of working with BitLocker recovery keys involves the ability retrieve them without having to sign in directly into the cluster nodes. To accomplish this, you will use CredSSP to pass credentials to the node (since they needs to be delegated to DC to pull the password, resulting in so-called *double-hop* authentication). Implementing CredSSP has changed slightly in Windows Server 2025. You'll use registry to allow credential delegation to cluster nodes.
 
@@ -233,7 +233,7 @@ In this lab you will learn about the use BitLocker to protect Azure Local storag
 
    ![](./media/0301-07-getasrecoverykeyinfo.png)
 
-### Task04: Retrieve BitLocker recovery keys from Active Directory
+### Task 04: Retrieve BitLocker recovery keys from Active Directory
 
 > **Note:** You can also retrieve BitLocker recovery keys from Active Directory (once you install management tools)
 
@@ -263,7 +263,7 @@ In this lab you will learn about the use BitLocker to protect Azure Local storag
 
    ![](./media/0301-09-aducrecoverykey.png)
 
-### Task04: Back up recovery key to other AD objects
+### Task 05: Back up recovery key to other AD objects
 
 > **Note:** As illustrated in the previous task, the BitLocker recovery key is present only in the AD computer object corresponding to the single cluster node, which was the owner of the volume at the time of its encryption. This is suboptimal, since the loss of computer object would result in a loss of the recovery keys. To remediate this shortcoming, you will distribute the key to computer objects associated with other cluster nodes.
 
@@ -310,7 +310,7 @@ In this lab you will learn about the use BitLocker to protect Azure Local storag
 
    ![](./media/0301-10-aducrecoverykeyreplicated.png)
 
-### Task05: Encrypt volumes by using PowerShell
+### Task 06: Encrypt volumes by using PowerShell
 
 > **Note:** In this task, you will step through the process of encrypting CSV volumes with BitLocker.
 
@@ -395,7 +395,7 @@ In this lab you will learn about the use BitLocker to protect Azure Local storag
 
    ![](./media/0301-11-encryptvolume.png)
 
-### Task06: Simulate recovery from failure
+### Task 07: Simulate recovery from failure
 
 1. In the Virtual Machine Connection to MSLab-Mgmt VM, from the Administrator: Windows PowerShell ISE window, run the following code to simulate BitLocker recovery from a failure: 
 

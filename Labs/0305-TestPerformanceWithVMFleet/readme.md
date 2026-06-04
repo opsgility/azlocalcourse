@@ -23,7 +23,7 @@ In this lab you will test performance of an Azure Local deployment by using VMFl
 
 > **Note:**: To create a Windows Server 2022 VHD, you will need the Windows Server 2022 ISO, which can be downloaded from the [Windows Server Evaluation Center](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2022). Although you can find there also the prebuilt VHD, it is 127 GB in size. During VMFleet deployment, the VHD is converted to a fixed-size VHD, causing it to expand to its full capacity and consume a significant amount of storage. For this reason, you should create your own VHD with a smaller size, such as 30 GB, to reduce storage consumption. Alternatively, you can use any other Windows operating system ISO, as long as it contains `install.wim` in `Sources` directory.
 
-#### Step 1: Download [CreateParentDisk.ps1](https://github.com/microsoft/MSLab/blob/master/Tools/CreateParentDisk.ps1) script. 
+#### Step 01: Download [CreateParentDisk.ps1](https://github.com/microsoft/MSLab/blob/master/Tools/CreateParentDisk.ps1) script. 
 
 > **Note:**: This script will also download the [Convert-WindowsImage.ps1](https://github.com/microsoft/MSLab/blob/master/Tools/Convert-WindowsImage.ps1) script. If you are working in offline environment, download it separately and place into same directory. 
 
@@ -31,7 +31,7 @@ In this lab you will test performance of an Azure Local deployment by using VMFl
 
 1. In the lab VM, launch Microsoft Edge and download the CreateParentDisk.ps1 script from [https://github.com/microsoft/MSLab/blob/master/Tools/CreateParentDisk.ps1](https://github.com/microsoft/MSLab/blob/master/Tools/CreateParentDisk.ps1) and copy it to the `C:\Source` folder.
 
-#### Step 2: Execute CreateParentDisk.ps1
+#### Step 02: Execute CreateParentDisk.ps1
 
 1. In the Lab VM, launch Windows PowerShell ISE, open `C:\Source\CreateParentDisk.ps1` and run it. 
 1. When prompted to provide the location of the Windows Server 2022 ISO, navigate to `C:\Source\SERVER_EVAL_x64FRE_en-us.iso` and select **Open**.

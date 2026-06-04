@@ -24,7 +24,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
    > **Note:**: You'll be running all tasks in this lab from the MSLab-Mgmt VM.
 
-### Task01: Review Network ATC PowerShell cmdlets
+### Task 01: Review Network ATC PowerShell cmdlets
 
 1. Start Windows PowerShell ISE and run the following code:
 
@@ -55,7 +55,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
    ![](./media/0201-01-atccmdlets.png)
 
 
-### Task02: Review Network ATC status and default values
+### Task 02: Review Network ATC status and default values
 
 > **Note:**: Network Intent can be two types: Cluster and Server, so you can apply it to individual servers or the entire cluster. There is a corresponding service that applies the configuration and you can learn about its status by using Event Viewer. There are also numerous settings that Network ATC can configure.
 
@@ -294,7 +294,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
    - `Get-VMSwitch -CimSession $ClusterNodes | Select Name,ComputerName,*Iov*` retrieves SR-IOV configuration and capability information for the converged switch; SR-IOV is enabled in configuration but unsupported by the hardware and platform, so no virtual functions or queue pairs are active.
    - `Get-VMSwitchTeam -CimSession $ClusterNodes` displays the NIC teaming configuration for the converged switch; both nodes use SwitchIndependent teaming mode with two Hyper-V network adapters participating in the team.
 
-### Task03: Troubleshoot Network ATC
+### Task 03: Troubleshoot Network ATC
 
 > **Note:**: The provided code is used to validate and troubleshoot Network ATC configuration by confirming that the required clustering and Network ATC components are installed, checking intent deployment status across nodes, verifying that the NetworkATC service is running, and displaying operational and administrative event logs for analysis of the ATC-related behavior. It also collects and exports the full desired state of all network intents in the cluster by using the `Get-NetIntentAllGoalStates` cmdlet, which provides the intended final configuration Network ATC is trying to apply across networking components.
 
@@ -330,7 +330,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
    ![](./media/0201-11-troubleshooting.png)
 
-### Task03: Troubleshoot Network ATC (advanced tracing)
+### Task 04: Troubleshoot Network ATC (advanced tracing)
 
 > **Note:**: The provided code is meant to diagnose and debug Network ATC intent deployment issues on a specific cluster node by enabling detailed tracing, forcing a retry of a storage-related intent, and collecting the resulting trace logs for analysis. It starts Network ATC tracing on ALNode1, identifies the storage intent applied in the cluster, and triggers a retry state for that intent on the selected node to reproduce and capture configuration behavior. After a short wait, tracing is stopped and the generated ETL trace is converted into a readable text format using netsh, then retrieved locally.
 
@@ -367,7 +367,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
    ![](./media/0201-12-advancedtroubleshooting.png)
 
-### Task04: Adjust intents using overrides
+### Task 05: Adjust intents using overrides
 
 > **Note:**: The provided code modifies and validates Network ATC intent configuration for the cluster by first creating and applying global overrides that adjust live migration behavior, specifically setting the maximum SMB migration bandwidth to 20 Gbps and allowing up to 4 concurrent virtual machine migrations, then applying storage intent changes including updating storage VLANs to 713 and 714 and enforcing a jumbo frame MTU size of 9014 bytes via adapter property overrides. It then waits for the Network ATC intent engine to finish provisioning or retrying until the configuration reaches a stable state, after which it re-queries the intent to confirm the applied settings and reviews the adapter-level advanced parameters, and finally collects recent Network ATC administrative event logs from all cluster nodes for validation and troubleshooting of the configuration changes.
 
@@ -426,7 +426,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
    - `Get-SmbBandwidthLimit -Category LiveMigration -CimSession $ClusterNodes`
    - `Get-VMHost -CimSession $ClusterNodes | Select Name,MaximumVirtualMachineMigrations`
 
-### Task05: Review Network ATC functionality in Windows Admin Center
+### Task 06: Review Network ATC functionality in Windows Admin Center
 
 1. Start Microsoft Edge and navigate to [Windows Admin Center download page](https://www.microsoft.com/en-us/evalcenter/download-windows-admin-center).
 1. Download and install Windows Admin Center download with the following settings: 
@@ -462,7 +462,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 1. In the vertical menu on the left side, select **Network ATC cluster settings**.
 1. Note the values of the **Maximum virtual machine migrations** (set to 4) and **Maximum SMB migration bandwidth in Gbps** (set to 20).
 
-### Task06: Revert Network ATC settings
+### Task 07: Revert Network ATC settings
 
 > **Note:**: The provided code reverts previously applied override settings. It retrieves the cluster nodes and the existing storage intent, then explicitly resets adapter property overrides by setting JumboPacket to 1514. It also re-applies the storage intent with specific VLANs (711 and 712). In addition, it resets global cluster overrides by removing any SMB migration bandwidth cap (setting it to $null) and limiting live migrations to a single concurrent operation. The script then applies these reverted intent settings, waits until the configuration is fully provisioned (exiting when status is no longer "Provisioning" or "Retrying"), and finally validates the resulting state by querying intent status, adapter overrides, VLAN assignments, VM host migration limits, and SMB bandwidth limits across the cluster nodes.
 
@@ -534,7 +534,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
    Get-NetIntentStatus -ClusterName $ClusterName
    ```
 
-### Task07: Retry failed intents
+### Task 08: Retry failed intents
 
 > **Note:**: The provided code detects and retries failed network intent operations. It first queries all intent statuses on the cluster and filters for any entries with a "Failed" configuration state, storing them in a collection. It then iterates through each failed intent and remotely invokes a command on the corresponding host to reset its retry state using `Set-NetIntentRetryState`, effectively triggering a reprocessing of the failed intent on a per-node basis. After initiating retries, the script pauses briefly to allow the remediation process to begin, and finally re-queries the cluster's intent status to verify whether the previously failed configurations have transitioned out of the failed state or are progressing through re-application.
 

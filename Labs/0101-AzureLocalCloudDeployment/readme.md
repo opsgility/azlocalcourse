@@ -50,9 +50,9 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
    Get-VM *ALNode* | Disable-VMIntegrationService -Name "Time Synchronization"
    ```
 
-### Task01: Validate connectivity to servers
+### Task 01: Validate connectivity to servers
 
-#### Step 1: Test name resolution
+#### Step 01: Test name resolution
 
 1. From the Hyper-V host, connect to MSLab-Mgmt VM by using Virtual Machine Connection (using Enhanced Session and Full Screen Mode).
 1. Sign in by using the following credentials:
@@ -73,7 +73,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
 
    > **Note:**: If name resolution does not work, add the names of ALNode1 and ALNode2 with their respective IP addresses to the local hosts file. Verify that the hosts are replying. The current Azure Local images allow inbound ICMP connectivity. It is important to confirm that the name resolution works.
 
-#### Step 2: Check WinRM connectivity
+#### Step 02: Check WinRM connectivity
 
 1. Start Windows PowerShell ISE and run the following code:
 
@@ -86,7 +86,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
 
    ![](./media/0101-03-winrm.png)
 
-#### Step 3: Connect to servers using WinRM
+#### Step 03: Connect to servers using WinRM
 
 1. From Windows PowerShell ISE, run the following code:
 
@@ -110,7 +110,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
 
    ![](./media/0101-04-remoting.png)
 
-### Task02: Validate environment by using Environment Checker tool
+### Task 02: Validate environment by using Environment Checker tool
 
 1. From Windows PowerShell ISE, run the following code:
 
@@ -126,7 +126,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
 
    ![](./media/0101-05-validation.png)
 
-### Task03: Configure Active Directory prerequisites
+### Task 03: Configure Active Directory prerequisites
 
 1. From Windows PowerShell ISE, run the following code:
 
@@ -164,7 +164,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
 
    ![](./media/0101-07-adlcmuser.png)
 
-### Task04: Create Azure resources
+### Task 04: Create Azure resources
 
 1. From Windows PowerShell ISE, run the following code:
 
@@ -294,9 +294,9 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
    ![](./media/0101-10-azpwshconnectnodes.png)
    ![](./media/0101-11-azportalconnectnodes.png)
 
-### Task06: Validate prerequisites
+### Task 06: Validate prerequisites
 
-#### Step 1: Validate IP configuration
+#### Step 01: Validate IP configuration
 
 1. From Windows PowerShell ISE, run the following code:
 
@@ -328,7 +328,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
    #endregion
    ```
 
-#### Step 3: Validate time synchronization
+#### Step 02: Validate time synchronization
 
 1. From Windows PowerShell ISE, run the following code:
 

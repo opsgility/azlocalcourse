@@ -34,7 +34,7 @@ $LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTN
 
 1. While signed in to the lab VM, launch Microsoft Edge, on the web browser page, navigate to the Azure portal at [https://portal.azure.com](https://portal.azure.com), and sign in using the Entra ID credentials you are using in this lab.
 1. In the Azure portal, navigate to the **Disks** page and create a **Premium SSD** data disk of **512 GB** in size in the **East Asia** Azure region in the **MS-Lab-`<username>`** resource group (where the **<username>** placeholder designaes the name of the Entra ID user account you are using in this lab).
-1. In the Azure portal, navigate to the page of your lab VM (you will find it in the same resource group and attach the newly created disk to it. 
+1. In the Azure portal, navigate to the page of your lab VM (you will find it in the same resource group) and attach the newly created disk to it. 
 1. In the lab VM, use Server Manager to initialize the newly attached disk as **GPT**, format it by using **NTFS** file system, and assign to it the drive letter **W:**.
 1. Copy conent of the `F:\MSLab` directory to `W:\MSLab2025\` directory (you'll need to create it first).
 1. Replace the content of the `W:\MSLab2025\LabConfig.ps` file with the following code:

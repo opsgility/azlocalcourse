@@ -23,7 +23,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
    - Username: *CORP\LabAdmin*
    - Password: *Demo@pass12345*
 
-### Task01: Prepare infrastructure to support Azure Site Recovery
+### Task 01: Prepare infrastructure to support Azure Site Recovery
 
 > **Note:** This task involves setting up an Azure Recovery Services vault, creating a Hyper-V site, installing the site recovery extension, and creating a replication policy associated with Azure Local machines.
 
@@ -118,7 +118,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
    > **Note:** Wait for the resource provisioning to complete. This should take less than 1 minute.
 
-### Task02: Enable replication of Azure Local VMs
+### Task 02: Enable replication of Azure Local VMs
 
 1. In the web browser displaying the Azure portal, on the **Prepare infrastructure** page, in the **Step 2: Enable replication** section, select the **Enable replication** button.
 

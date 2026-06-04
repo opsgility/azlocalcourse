@@ -24,7 +24,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
    > **Note:**: You'll be running all tasks in this lab from the MSLab-Mgmt VM.
 
-### Task01: Identify storage paths
+### Task 01: Identify storage paths
 
 1. In the Virtual Machine Connection to MSLab-Mabs VM, start Microsoft Edge and navigate to [the Azure portal](https://portal.azure.com). Sign in by using the credentials granting you access to the Azure subscription that is used for this lab.
 1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab.
@@ -33,14 +33,14 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
    ![](./media/0203-01-storagepaths.png)
 
-### Task02: Identify logical networks
+### Task 02: Identify logical networks
 
 1. In the Azure portal, on the **Storage paths** page, in the left navigation menu, in the **Resources** section, select the **Logical networks** entry.
 1. On the **Logical networks** page, verify that all logical networks are listed with the **Succeeded** status.
 
    ![](./media/0203-02-logicalnetworks.png)
 
-### Task03: Provision Azure Local VM image by using an Azure Marketplace image
+### Task 03: Provision Azure Local VM image by using an Azure Marketplace image
 
 > **Note:**: Azure Local offers several options for provisioning VM images based on your environment and operational needs. You can download managed disks directly from Azure to reuse existing cloud VM images locally, or deploy trusted operating system and application images from Azure Marketplace. If you want centralized image management with versioning and sharing capabilities, you can use Azure Compute Gallery to distribute standardized images across environments. You can also store custom VHDs or image files in Azure Storage and import them into Azure Local as needed. For disconnected or tightly controlled environments, you can provision VMs using images stored on a local file share, allowing you to deploy workloads entirely within your on-premises infrastructure without requiring internet connectivity.
 
@@ -69,7 +69,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
 1. Once the deployment completes, select **Go to resource** to navigate to the **Azure Local Marketplace Gallery image** page displaying properties of the **2025-datacenter-azure-edition-smalldisk-01** image and verify that its status is listed as **Available**.
 
-### Task04: Create an Azure Local VM
+### Task 04: Create an Azure Local VM
 
 1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab.
 1. In the left navigation menu, expand the **Resources** section and select the **Virtual machines** entry.

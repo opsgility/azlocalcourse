@@ -22,7 +22,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
    - Username: *CORP\LabAdmin*
    - Password: *Demo@pass12345*
 
-### Task01: Create an Azure Recovery Services vault.
+### Task 01: Create an Azure Recovery Services vault.
 
 1. In the Virtual Machine Connection to MSLab-Mabs VM, start Microsoft Edge and navigate to [the Azure portal](https://portal.azure.com). Sign in by using the credentials granting you access to the Azure subscription that is used for this lab.
 1. In the Azure portal, navigate to the **Recovery Services vaults** page and select **+ Create**
@@ -58,7 +58,7 @@ where the **`<xx>`** placeholder designates the numeric values assigned to the n
 1. On the **Prepare infrastructure** page, in the section **2. Download vault credentials to register the server to the vault. Vault credentials will expire after 10 days**, select the checkbox **Already downloaded or using the latest Azure Backup Server installation** and then select **Download**.
 1. Verify that the vault credentials file has been downloaded to the **Downloads** folder.
 
-### Task02: Install MABS
+### Task 02: Install MABS
 
 1. In the Virtual Machine Connection to MSLab-Mabs VM, open File Explorer, navigate to the `C:\Source` folder, and initiate extraction of Microsoft Azure Backup Server installation files by launching **MABS_V4.exe**.
 
@@ -115,7 +115,7 @@ where the **`<xx>`** placeholder designates the numeric values assigned to the n
 
 1. Restart the operating system following the installation. This will automatically close the Virtual Machine Connection to MSLab-Mgmt VM.
 
-### Task03: Configure MABS storage
+### Task 03: Configure MABS storage
 
 1. From the lab VM, if needed, open the Hyper-V Manager console.
 1. In the Hyper-V Manager console, in the **Actions** pane, select **New** followed by **Hard disk**.
@@ -155,7 +155,7 @@ where the **`<xx>`** placeholder designates the numeric values assigned to the n
 
    ![](./media/0303-05-mabsaddvolume.png)
 
-### Task04: Deploy MABS agent to Azure Local nodes
+### Task 04: Deploy MABS agent to Azure Local nodes
 
 > **Note:** In order to protect Azure Local VMs, you need to install the MABS agent on the Azure Local cluster nodes. However, this requires changes to Defender Application Control running on the nodes, since, by default, it will block the agent installation. While you could modify code integrity policies to permit execution of the required binaries, for the sake of simplicitly, you will temporarily switch from the enforced to audit mode instead. To manage Application Control from MABS, you will also need to enable CredSSP.
 
@@ -248,7 +248,7 @@ where the **`<xx>`** placeholder designates the numeric values assigned to the n
 
    ![](./media/0303-08-clusternodesadded.png)
 
-### Task05: Configure MABS protection
+### Task 05: Configure MABS protection
 
 1. In the Microsoft Azure Backup Server console, in the verical menu on the left side, select **Protection** and then select **New** in the toolbar.
 
