@@ -36,7 +36,26 @@ $LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTN
 1. In the Azure portal, navigate to the **Disks** page and create a **Premium SSD** data disk of **512 GB** in size in the **East Asia** Azure region in the **MS-Lab-`<username>`** resource group (where the **<username>** placeholder designaes the name of the Entra ID user account you are using in this lab).
 1. In the Azure portal, navigate to the page of your lab VM (you will find it in the same resource group) and attach the newly created disk to it. 
 1. In the lab VM, use Server Manager to initialize the newly attached disk as **GPT**, format it by using **NTFS** file system, and assign to it the drive letter **W:**.
-1. Copy conent of the `F:\MSLab` directory to `W:\MSLab2025\` directory (you'll need to create it first).
+1. Copy the following content from the `F:\MSLab` directory to `W:\MSLab2025\` directory (you'll need to create the target directory first):
+
+   - 1_Prereq.ps1
+   - 2_CreateParentDisks.ps1
+   - 3_Deploy.ps1
+   - 4_TimeSync.ps1
+   - Cleanup.ps1
+   - LabConfig.ps1
+
+1. Copy the following content from the `F:\MSLab\ParentDisks` directory to `W:\MSLab2025\ParentDisks` directory (you'll need to create the target directory first):
+
+   - Convert-WindowsImage.ps1
+   - CreateParentDisk.ps1
+   - CreateVMFleetDisk.ps1
+   - DownloadLatestCUs.ps1
+   - PatchParentDisks.ps1
+   - tools.vhdx
+   - Win2025Core_G2.vhdx
+   - Win2025_G2.vhdx
+
 1. Replace the content of the `W:\MSLab2025\LabConfig.ps` file with the following code:
 
 ```powershell
@@ -55,7 +74,31 @@ $LabConfig.VMs += @{ VMName = 'Management' ; ParentVHD = 'Win2025_G2.vhdx'; MGMT
 $LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTNICs=1}
 ```
 
-1. Launch Windows PowerShell ISE, open `W:\MSLab2025\3_Deploy.ps1`, and run it.
+1. Launch Windows PowerShell ISE, open `W:\MSLab2025\1_Prereq.ps1`, and run it.
+
+   > **Note:** Wait for the script execution to complete. This might take about 2 minutes.
+
+1. From the same Windows PowerShell ISE window, open `W:\MSLab2025\2_CreateParentDisks.ps1`, and run it.
+
+   > **Note:** When prompted to provide the location of the ISO file for the parent disk, point to `C:\Source\26100.32230.260111-0550.lt_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso`
+
+   > **Note:** When prompted to provide the location of the corresponding MSU file, select **Cancel**.
+
+   > **Note:** Wait for the script execution to complete. This might take about 20 minutes.
+
+1. From the same Windows PowerShell ISE window, open `W:\MSLab2025\ParentDisks\CreateParentDisk.ps1`, and run it.
+
+   > **Note:** When prompted to provide the location of the ISO file for the parent disk, point to `C:\Source\26100.32230.260111-0550.lt_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso`
+
+   > **Note:** When prompted to provide the location of the corresponding MSU file, select **Cancel**.
+
+    **Note:** When prompted to choose the operating system, select **Windows Server 2026 Datacenter Edition**.
+
+    **Note:** When prompted to specify the name of the disk and its size, accept the default values by pressing the **Enter** key.
+
+   > **Note:** Wait for the script execution to complete. This might take about 5 minutes.
+
+1. From the same Windows PowerShell ISE window, open `W:\MSLab2025\3_Deploy.ps1`, and run it.
 
    > **Note:** Wait for the script execution to complete. This might take about 10 minutes.
 
