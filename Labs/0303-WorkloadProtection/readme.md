@@ -16,7 +16,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 
 1. From the Hyper-V Manager on the lab VM, start the MSLab-DC.
 1. Ensure that the OS on MSLab-DC VM is running and then start the MSLab-ALNode1 and MSLab-ALNode2 VMs.
-1. Create a new VM named MSLab-Mabs with 2 vCPUs and 8912 GB of statically assigned memory using the existing disk stored in `M:\VMs\MSLab-Mabs\Virtual Hard Disks1` folder. Connect the network adapter of the VM to the MSLab-LabSwitch virtual switch).
+1. Create a new Generation 2 VM named MSLab-Mabs with 2 vCPUs and 8912 MB of statically assigned memory using the existing disk stored in `M:\VMs\MSLab-Mabs\Virtual Hard Disks1` folder. Connect the network adapter of the VM to the MSLab-LabSwitch virtual switch).
 1. Start the MSLab-Mabs VM and connect to it by using Virtual Machine Connection (using Enhanced Session and Full Screen Mode).
 1. Sign in by using the following credentials:
 
