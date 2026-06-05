@@ -7,7 +7,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 ## Prerequisites
 
 * Hydrated MSLab containing an Azure Local deployment
-* **MSLab-Mabs** VM provisioned
+* Virtual disks of the **MSLab-Mabs** VM stored in `M:\VMs\MSLab-Mabs\Virtual Hard Disks1` folder.
 * An Azure Local VM provisioned in the Azure Local deployment
 
 ## The lab
@@ -15,9 +15,29 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 ### Preparation
 
 1. From the Hyper-V Manager on the lab VM, start the MSLab-DC.
-1. Ensure that the OS on MSLab-DC VM is running and then start the MSLab-Mabs, MSLab-ALNode1, and MSLab-ALNode2 VMs.
-1. Connect to MSLab-Mabs VM by using Virtual Machine Connection (using Enhanced Session and Full Screen Mode).
+1. Ensure that the OS on MSLab-DC VM is running and then start the MSLab-ALNode1 and MSLab-ALNode2 VMs.
+1. Create a new VM named MSLab-Mabs with 2 vCPUs and 8912 GB of statically assigned memory using the existing disk stored in `M:\VMs\MSLab-Mabs\Virtual Hard Disks1` folder. Connect the network adapter of the VM to the MSLab-LabSwitch virtual switch).
+1. Start the MSLab-Mabs VM and connect to it by using Virtual Machine Connection (using Enhanced Session and Full Screen Mode).
 1. Sign in by using the following credentials:
+
+   - Username: *Administrator*
+   - Password: *Demo@pass12345*
+
+1. Once signed in, use Device Manager to uninstall the hidden, inactive network adapter `Microsoft Hyper-V Network Adapter`, rename network adapter `Enternet 2` to `Ethernet` (by running the PowerShell cmdlet `Rename-NetAdapter -Name 'Ethernet 2' -NewName 'Ethernet'), and assign statically the following IP configuration to the network adapter of the Mabs server.
+
+   |Settting|Value|
+   |----|---|
+   |IP address|**10.0.0.200**|
+   |Subnet mask|**255.255.255.0**|
+   |Default gateway|**10.0.0.1**|
+   |Preferred DNS Server|**10.0.0.1**|
+
+1. Use the **System** Control Panel applet to remove and re-add the Mabs server from/to the Corp.contoso.com Active Directory domain. When performing this task, use the following credentials to authenticate.
+
+   - Username: *CORP\LabAdmin*
+   - Password: *Demo@pass12345*
+
+1. Restart the operating system to finalize the changes and sign-in back by using the following credentials:
 
    - Username: *CORP\LabAdmin*
    - Password: *Demo@pass12345*
@@ -44,8 +64,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 
    > **Note:** Wait for the resource provisioning to complete. This should take about 2 minutes.
 
-1. Once the vault is provisioned, select **Go to resource** to navigate to the **ALClus`<xx>`-Bpk-RSVault** page (
-where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab).
+1. Once the vault is provisioned, select **Go to resource** to navigate to the **ALClus`<xx>`-Bpk-RSVault** page (where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab).
 1. On the **Overview** tab, select **+ Backup**.
 1. On the **Backup Goal** page, specify the following settings:
 
