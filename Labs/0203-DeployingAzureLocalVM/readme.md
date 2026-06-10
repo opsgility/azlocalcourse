@@ -67,7 +67,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
    > **Note:** Wait for the deployment tasks to complete. This might take about 2.5 hours.
 
-1. Once the deployment completes, select **Go to resource** to navigate to the **Azure Local Marketplace Gallery image** page displaying properties of the **22025-image-01*** image and verify that its status is listed as **Available**.
+1. Once the deployment completes, select **Go to resource** to navigate to the **Azure Local Marketplace Gallery image** page displaying properties of the **22025-image-01** image and verify that its status is listed as **Available**.
 
  > **Note:** In case you run into issues with the Azure Marketplace image download, use the following procedure instead.
 
@@ -140,8 +140,8 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction Si
    |Save image as|**2025-image-01**|
    |Custom location|**ALClus`<xx>`**|
    |OS type|**Windows**|
-   |VM generation|***Gen 2**|
-   |Local file share path|**\\ALClus`<xx>`SoFS\Images\Win2025Core_G2.vhdx**|
+   |VM generation|**Gen 2**|
+   |Local file share path|**\\\\ALClus`<xx>`SoFS\Images\Win2025Core_G2.vhdx**|
    |Storage path|**Choose automatically**|
 
 1. On the **Basics** tab, select **Review + create** and, on the **Review + create** tab, select **Create**.
