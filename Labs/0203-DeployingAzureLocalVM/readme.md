@@ -58,7 +58,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
    |Setting|Value|
    |---|---|
    |Resource group|**ALClus-`<username>`**|
-   |Save image as|**2025-datacenter-azure-edition-smalldisk-01**|
+   |Save image as|**2025-image-01***|
    |Custom location|**ALClus`<xx>`**|
    |Image to download|**[smalldisk] Windows Server 2025 Datacenter Azure Edition - Gen2**|
    |Storage path|**Choose automatically**|
@@ -67,21 +67,21 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
    > **Note:** Wait for the deployment tasks to complete. This might take about 2.5 hours.
 
-1. Once the deployment completes, select **Go to resource** to navigate to the **Azure Local Marketplace Gallery image** page displaying properties of the **2025-datacenter-azure-edition-smalldisk-01** image and verify that its status is listed as **Available**.
+1. Once the deployment completes, select **Go to resource** to navigate to the **Azure Local Marketplace Gallery image** page displaying properties of the **22025-image-01*** image and verify that its status is listed as **Available**.
 
  > **Note:** In case you run into issues with the Azure Marketplace image download, use the following procedure instead.
 
  1. Switch back to the lab VM and launch File Explorer.
- 1. In File Explorer, navigate to the `C:\Source` folder and copy the file `C:\Source\26100.32230.260111-0550.lt_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso`.
+ 1. In File Explorer, navigate to the `F:\MSLab\ParentDisks` folder and copy the file `Win2025Core_G2.vhdx`.
  1. Switch to the Virtual Machine Connection to MSLab-Mabs VM and paste the copied file to the C:\Source folder (you might need to create the folder first).
  1. Within the Virtual Machine Connection to MSLab-Mabs VM, launch Windows PowerShell ISE in the privileged mode (as administrator) and run the following code to provision the Scale-Out File Server role install:
 
-    > **Note:**: In the value of the `$SoFsName` variable, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+    > **Note:**: In the value of the `$SoFsName` variable and the Cluster parameter, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    ```powershell
    $SoFsName = "ALClus<xx>SoFS"
-if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus00" -ErrorAction SilentlyContinue)) {
-    Add-ClusterScaleOutFileServerRole -Name $SoFsName -Cluster "ALClus00"
+if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction SilentlyContinue)) {
+    Add-ClusterScaleOutFileServerRole -Name $SoFsName -Cluster "ALClus<xx>"
 }
    ```
 
@@ -123,7 +123,7 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus00" -ErrorAction Sile
 1. In Windows PowerShell ISE, run the following code to copy the Windows Server 2025 ISO image to the `Images` share:
 
    ```powershell
-   Copy-Item -Path 'C:\Source\26100.32230.260111-0550.lt_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso' -Destination '\\$SoFsName\Images\' -Force
+   Copy-Item -Path 'C:\Source\Win2025Core_G2.vhdx' -Destination '\\$SoFsName\Images\' -Force
    ```
 1. . In the Virtual Machine Connection to MSLab-Mgmt VM, switch to the Microsoft Edge window displaying the Azure portal.
 1. In the Azure portal, on the **Logical networks** page, in the left navigation menu, in the **Resources** section, select the **VM Images** entry.
@@ -137,11 +137,11 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus00" -ErrorAction Sile
    |Setting|Value|
    |---|---|
    |Resource group|**ALClus-`<username>`**|
-   |Save image as|**2025-datacenter-azure-edition-smalldisk-01**|
+   |Save image as|**2025-image-01**|
    |Custom location|**ALClus`<xx>`**|
    |OS type|**Windows**|
    |VM generation|***Gen 2**|
-   |Local file share path|**\\ALClus`<xx>`SoFS\Images\26100.32230.260111-0550.lt_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso**|
+   |Local file share path|**\\ALClus`<xx>`SoFS\Images\Win2025Core_G2.vhdx**|
    |Storage path|**Choose automatically**|
 
 1. On the **Basics** tab, select **Review + create** and, on the **Review + create** tab, select **Create**.
@@ -165,7 +165,7 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus00" -ErrorAction Sile
    |Virtual machine name|**ALClus`<xx>`LabVM0**|
    |Security type|**Standard**|
    |Storage path|**Choose automatically**|
-   |Image|**2025-datacenter-azure-edition-smalldisk-01**|
+   |Image|**2025-image-01***|
    |Virtual processor count|**4**|
    |Memory (MB)|**8192**|
    |Memory type|**Static**|
