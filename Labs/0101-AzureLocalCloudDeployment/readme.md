@@ -176,7 +176,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
 
    ```powershell
    $GatewayName="ALClus<xx>-ArcGW"
-   $ResourceGroupName="ALClus-<username>"
+   $ResourceGroupName="ALClus-<username>-RG"
    $Location="southeastasia"
 
    #for the list of supported regions, refer to https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-23h2?view=azloc-2604&viewFallbackFrom=azloc-2507&tabs=azure-public#azure-requirements
@@ -382,7 +382,7 @@ $LabConfig.VMs += @{ VMName = 'Mgmt' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1
 
    |Setting|Value|
    |---|---|
-   |Resource group|**ALClus-`<username>`**|
+   |Resource group|**ALClus-`<username>`-RG**|
    |Instance name|**ALClus`<xx>`**|
    |Region|**(Asia Pacific) SouthEast Asia**|
    |Cluster options|**Standard**|
