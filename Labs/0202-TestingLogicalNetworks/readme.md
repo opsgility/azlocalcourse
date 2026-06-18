@@ -174,7 +174,7 @@ You will create a virtual switch in the DC VM in order to be able to create mult
    $ClusterNodes=(Get-ClusterNode -Cluster $ClusterName).Name
    $VirtualSwitchName=(Get-VMSwitch -CimSession $ClusterNodes[0]).Name
    $Location="SouthEastAsia"
-   $ResourceGroupName="ALClus-aluser<xx>"
+   $ResourceGroupName="ALClus-aluser<xx>-RG"
    $CustomLocationID=(Get-AzCustomLocation -ResourceGroupName $ResourceGroupName).ID
 
    $Networks=@()

@@ -54,7 +54,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 
    |Setting|Value|
    |---|---|
-   |Resource group|**MS-Lab-`<username>`**|
+   |Resource group|**MS-Lab-`<username>`-RG**|
    |Vault name|**ALClus`<xx>`-Bpk-RSVault**|
    |Region|**(Asia Pacific) East Asia**|
 

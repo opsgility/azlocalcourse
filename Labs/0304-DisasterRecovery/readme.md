@@ -45,7 +45,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
    |Setting|Value|
    |---|---|
-   |Resource group|**MS-Lab-`<username>`**|
+   |Resource group|**MS-Lab-`<username>`-RG**|
    |Vault name|**ALClus`<xx>`-Asr-RSVault**|
    |Region|**(Asia Pacific) East Asia**|
 
@@ -85,7 +85,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
    |Setting|Value|
    |---|---|
-   |Resource group|**MS-Lab-`<username>`**|
+   |Resource group|**MS-Lab-`<username>`-RG**|
    |Virtual network name|**AlClus`<xx>`-DR-VNet**|
    |Region|**(Asia Pacific) East Asia**|
 
@@ -103,7 +103,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
    |Setting|Value|
    |---|---|
-   |Resource group|**MS-Lab-`<username>`**|
+   |Resource group|**MS-Lab-`<username>`-RG**|
    |Storage account name|any valid globally unique name|
    |Region|**(Asia Pacific) East Asia**|
    |Preferred storage type|**Azure Blob Storage or Azure Data Lake Storage**|
@@ -134,7 +134,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
    |Setting|Value|
    |---|---|
-   |Post-failover resource group|**MS-Lab-`<username>`**|
+   |Post-failover resource group|**MS-Lab-`<username>`-RG**|
    |Replica Storage type|**Managed disk**|
    |Network|**Configure now for selected machines**|
    |Virtual network|**AlClus`<xx>`-DR-VNet**|

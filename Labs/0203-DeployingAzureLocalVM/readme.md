@@ -57,7 +57,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
    |Setting|Value|
    |---|---|
-   |Resource group|**ALClus-`<username>`**|
+   |Resource group|**ALClus-`<username>`-RG**|
    |Save image as|**2025-image-01***|
    |Custom location|**ALClus`<xx>`**|
    |Image to download|**[smalldisk] Windows Server 2025 Datacenter Azure Edition - Gen2**|
@@ -136,7 +136,7 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction Si
 
    |Setting|Value|
    |---|---|
-   |Resource group|**ALClus-`<username>`**|
+   |Resource group|**ALClus-`<username>`-RG**|
    |Save image as|**2025-image-01**|
    |Custom location|**ALClus`<xx>`**|
    |OS type|**Windows**|
@@ -161,7 +161,7 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction Si
 
    |Setting|Value|
    |---|---|
-   |Resource group|**ALClus-`<username>`**|
+   |Resource group|**ALClus-`<username>`-RG**|
    |Virtual machine name|**ALClus`<xx>`LabVM0**|
    |Security type|**Standard**|
    |Storage path|**Choose automatically**|
