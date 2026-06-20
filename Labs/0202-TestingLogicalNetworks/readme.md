@@ -42,7 +42,7 @@ You will create a virtual switch in the DC VM in order to be able to create mult
 
 1. Start Windows PowerShell ISE and run the following code:
 
-   > **Note:**: The provided code configures Windows Server 2025 VM (DC) as a virtualized network hub using Hyper-V and DHCP. It defines four virtual networks (vNet01–vNet04) with associated VLAN IDs, IP subnets, gateway/DNS IPs, and DHCP settings, then ensures required management tools are installed (Hyper-V PowerShell, DHCP/Remote Access RSAT, routing components). For each network, it creates a corresponding management OS vNIC on the Hyper-V virtual switch, assigns VLAN tagging, and configures a static IP address. It then creates or updates DHCP scopes for each subnet, enabling or disabling them based on configuration, and sets DHCP options such as DNS server (Option 6), default gateway (Option 3), and domain name (Option 15). Finally, it enables IP routing on the server by installing RRAS components and setting the registry flag for IP forwarding, restarting routing services so the DC can route traffic between the defined virtual networks.
+   > **Note:**: The provided code configures Windows Server 2025 VM (DC) as a virtualized network hub using Hyper-V and DHCP. It defines four virtual networks (vNet01–vNet04) with associated VLAN IDs, IP subnets, gateway/DNS IPs, and DHCP settings, then ensures required management tools are installed (Hyper-V, DHCP/Remote Access RSAT, routing components). For each network, it creates a corresponding management OS vNIC on the Hyper-V virtual switch, assigns VLAN tagging, and configures a static IP address. It then creates or updates DHCP scopes for each subnet, enabling or disabling them based on configuration, and sets DHCP options such as DNS server (Option 6), default gateway (Option 3), and domain name (Option 15). Finally, it enables IP routing on the server by installing RRAS components and setting the registry flag for IP forwarding, restarting routing services so the DC can route traffic between the defined virtual networks.
 
    ```powershell
    $Server="DC"
@@ -57,47 +57,70 @@ You will create a virtual switch in the DC VM in order to be able to create mult
 
    #create vSwitch
        #make sure hyper-v management tools are installed
-       Install-WindowsFeature -Name Hyper-V-PowerShell
-       #assuming there's just one NIC "ethernet"
-       New-VMSwitch -CimSession $Server -Name $vSwitchName -NetAdapterName "Ethernet" -EnableEmbeddedTeaming $true
-       #rename vNIC "management
-       Rename-VMNetworkAdapter -Name $vSwitchName -NewName Management -CimSession $Server -ManagementOS
-   
+       Install-WindowsFeature -Name RSAT-Hyper-V-Tools -IncludeAllSubFeature -IncludeManagementTools
+       # Check if vSwitch already exists
+       $existingSwitch = Get-VMSwitch -CimSession $Server -Name $vSwitchName -ErrorAction SilentlyContinue
+       if ($null -eq $existingSwitch) {
+           New-VMSwitch -CimSession $Server -Name $vSwitchName -NetAdapterName "Ethernet" -EnableEmbeddedTeaming $true
+           Write-Host "vSwitch '$vSwitchName' created."
+       }
+       else {
+           Write-Host "vSwitch '$vSwitchName' already exists."
+       }
+       # Check if Management OS vNIC exists
+       $mgmtNic = Get-VMNetworkAdapter -CimSession $Server -ManagementOS -ErrorAction SilentlyContinue |
+                  Where-Object { $_.Name -eq $vSwitchName }
+       if ($mgmtNic -and $mgmtNic.Name -ne "Management") {
+           Rename-VMNetworkAdapter -Name $vSwitchName -NewName "Management" -CimSession $Server -ManagementOS
+           Write-Host "vNIC renamed to 'Management'."
+       }
+       elseif ($mgmtNic -and $mgmtNic.Name -eq "Management") {
+           Write-Host "vNIC already named 'Management'."
+       }
+       else {
+           Write-Host "Management OS vNIC not found for switch '$vSwitchName'."
+       }
+
    #create networks
    #make sure DHCP management tools are installed. To view routing on DC you can also install RSAT-RemoteAccess
    Install-WindowsFeature -Name RSAT-DHCP,RSAT-RemoteAccess
    
    foreach ($Network in $Networks){
-       #create NIC
-       if (-not (Get-VMNetworkAdapter -ManagementOS -Name $network.Name -CimSession $Server -ErrorAction Ignore)){
-           Add-VMNetworkAdapter -CimSession $Server -ManagementOS -Name $network.name
-       }
-       #configure VLAN
-       #Set-VMNetworkAdapterIsolation -CimSession $Server -ManagementOS -VMNetworkAdapterName $Network.name -IsolationMode Vlan -DefaultIsolationID $network.vlanID
-       Set-VMNetworkAdapterVlan -CimSession $Server -ManagementOS -VMNetworkAdapterName $Network.name -Access -VlanId $network.vlanID
-   
-       #configure Static IP
-       if ((Get-NetIPAddress -CimSession $Server -InterfaceAlias "vEthernet ($($Network.name))" -AddressFamily IPv4).IPAddress -ne $Network.NicIP){
-           New-NetIPAddress -CimSession $Server -InterfaceAlias "vEthernet ($($Network.name))" -IPAddress $Network.NICIP -PrefixLength $Network.PrefixLength
-       }
-       #Add DHCP Scope
-       if (-not (Get-DhcpServerv4Scope -CimSession $Server -ScopeId $network.ScopeID -ErrorAction Ignore)){
-               Add-DhcpServerv4Scope -CimSession $Server -StartRange $Network.StartRange -EndRange $Network.EndRange -Name $Network.Name -State Active -SubnetMask $Network.SubnetMask
-       }
-       #disable/enable
-       if ($Network.DHCPEnabled){
-           Set-DhcpServerv4Scope -CimSession $Server -ScopeId $Network.ScopeID -State Active
-       }else{
-           Set-DhcpServerv4Scope -CimSession $Server -ScopeId $Network.ScopeID -State InActive
-       }
-   
-       #Configure dhcp options
-           #6 - Domain Name Server
-           Set-DhcpServerv4OptionValue -CimSession $Server -OptionId 6 -Value $Network.NICIP -ScopeId $Network.ScopeID
-           #3 - Gateway
-           Set-DhcpServerv4OptionValue -CimSession $Server -OptionId 3 -Value $Network.NICIP -ScopeId $Network.ScopeID
-           #15 - Domain Name
-           Set-DhcpServerv4OptionValue -CimSession $Server -OptionId 15 -Value $Network.DomainName -ScopeId $Network.ScopeID
+      #Create NIC
+      if (-not (Get-VMNetworkAdapter -ManagementOS -Name $Network.Name -CimSession $Server -ErrorAction SilentlyContinue)){
+         Add-VMNetworkAdapter -CimSession $Server -ManagementOS -Name $Network.Name
+      }
+
+      #Configure VLAN
+      Set-VMNetworkAdapterVlan -CimSession $Server -ManagementOS -VMNetworkAdapterName $Network.Name -Access -VlanId $Network.vlanID
+
+      #Configure Static IP (idempotent + avoids CIM "no instance" failure)
+      $alias = "vEthernet ($($Network.Name))"
+      $existingIP = Get-NetIPAddress -CimSession $Server -InterfaceAlias $alias -AddressFamily IPv4 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty IPAddress
+
+      if ($existingIP -notcontains $Network.NicIP){
+         New-NetIPAddress -CimSession $Server -InterfaceAlias $alias -IPAddress $Network.NICIP -PrefixLength $Network.PrefixLength -ErrorAction SilentlyContinue
+      }
+
+      #Add DHCP Scope
+      if (-not (Get-DhcpServerv4Scope -CimSession $Server -ScopeId $Network.ScopeID -ErrorAction SilentlyContinue)){
+         Add-DhcpServerv4Scope -CimSession $Server -StartRange $Network.StartRange -EndRange $Network.EndRange -Name $Network.Name -State Active -SubnetMask $Network.SubnetMask
+      }
+
+      #Disable/enable
+      if ($Network.DHCPEnabled){
+         Set-DhcpServerv4Scope -CimSession $Server -ScopeId $Network.ScopeID -State Active
+      }else{
+         Set-DhcpServerv4Scope -CimSession $Server -ScopeId $Network.ScopeID -State InActive
+      }
+
+      #Configure dhcp options
+         #6 - Domain Name Server
+         Set-DhcpServerv4OptionValue -CimSession $Server -OptionId 6 -Value $Network.NICIP -ScopeId $Network.ScopeID
+         #3 - Gateway
+         Set-DhcpServerv4OptionValue -CimSession $Server -OptionId 3 -Value $Network.NICIP -ScopeId $Network.ScopeID
+         #15 - Domain Name
+         Set-DhcpServerv4OptionValue -CimSession $Server -OptionId 15 -Value $Network.DomainName -ScopeId $Network.ScopeID
    }
    
    #make sure routing is enabled on DC
@@ -143,11 +166,13 @@ You will create a virtual switch in the DC VM in order to be able to create mult
 
 ## Task 03: Configure logical networks
 
-1. Start Windows PowerShell ISE and run the following code:
+1. From Windows PowerShell ISE, run the following code:
 
    > **Note:**: The provided code automates creation of Azure Local logical networks by first gathering configuration details from an existing failover cluster and Hyper-V virtual switch, defining several virtual networks with VLANs and either dynamic or static IP allocation settings, and prepares ARM deployment templates for both network types. The code checks whether each logical network already exists in the specified Azure resource group and, if not, deploys it using the `New-AzResourceGroupDeployment` cmdlet against the microsoft.azurestackhci/logicalnetworks resource type. Dynamic networks are deployed directly with inline parameters, while static networks use a generated ARM parameter file containing subnet prefixes, IP pools, DNS servers, and default gateway information.
 
-   > **Note:**: In the name of the cluster and the resource group, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the values assigned to the variables representing the names of the cluster and the resource group (`$ClusterName` and `$ResourceGroupName`, respectively), replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+
+   > **Note:**: When prompted, authenticate by using the device authentication flow referencing the Entra ID user account you are using in this lab.
 
    ```powershell
    #Make sure failover clustering and Hyper-V PowerShell is installed
@@ -430,8 +455,10 @@ You will create a virtual switch in the DC VM in order to be able to create mult
    #Remove-Item $templateFileDynamic.FullName   ```
    ```
 
+   > **Note:**: Wait for the deployment to complete. This might take about 5 minutes.
+
 1. Start Microsoft Edge and navigate to [the Azure portal](https://portal.azure.com). Sign in by using the credentials granting you access to the Azure subscription.
-1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab.
+1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab.
 1. In the left navigation menu, expand the **Resources** section and select the **Logical networks** entry.
 1. On the **Logical networks** page, verify that all logical networks are listed with the **Succeeded** status.
 

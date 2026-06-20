@@ -12,8 +12,8 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
 ### Preparation
 
-1. From the Hyper-V Manager on the lab VM, start the MSLab-DC.
-1. Ensure that the OS on MSLab-DC VM is running and then start the MSLab-Mgmt, MSLab-ALNode1, and MSLab-ALNode2 VMs.
+1. From the Hyper-V Manager on the lab VM, if needed, start the MSLab-DC.
+1. Ensure that the OS on MSLab-DC VM is running and then, if needed, start the MSLab-Mgmt, MSLab-ALNode1, and MSLab-ALNode2 VMs.
 1. Connect to MSLab-Mgmt VM by using Virtual Machine Connection (using Enhanced Session and Full Screen Mode).
 1. Sign in by using the following credentials:
 
@@ -27,7 +27,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 ### Task 01: Identify storage paths
 
 1. In the Virtual Machine Connection to MSLab-Mgmt VM, start Microsoft Edge and navigate to [the Azure portal](https://portal.azure.com). Sign in by using the credentials granting you access to the Azure subscription that is used for this lab.
-1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab.
+1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab.
 1. In the left navigation menu, expand the **Resources** section and select the **Storage paths** entry.
 1. On the **Storage paths** page, verify that there is at least one storage path listed with the **Succeeded** status.
 
@@ -58,7 +58,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
    |Setting|Value|
    |---|---|
    |Resource group|**ALClus-`<username>`-RG**|
-   |Save image as|**2025-image-01***|
+   |Save image as|**2025-image-01**|
    |Custom location|**ALClus`<xx>`**|
    |Image to download|**[smalldisk] Windows Server 2025 Datacenter Azure Edition - Gen2**|
    |Storage path|**Choose automatically**|
@@ -71,26 +71,23 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
  > **Note:** In case you run into issues with the Azure Marketplace image download, use the following procedure instead.
 
- 1. Switch back to the lab VM and launch File Explorer.
- 1. In File Explorer, navigate to the `F:\MSLab\ParentDisks` folder and copy the file `Win2025Core_G2.vhdx`.
- 1. Switch to the Virtual Machine Connection to MSLab-Mabs VM and paste the copied file to the C:\Source folder (you might need to create the folder first).
- 1. Within the Virtual Machine Connection to MSLab-Mabs VM, launch Windows PowerShell ISE in the privileged mode (as administrator) and run the following code to provision the Scale-Out File Server role install:
+ 1. In the Virtual Machine Connection to MSLab-Mabs VM, launch File Explorer and verify that the  C:\Source folder contains the file **Win2025Core_G2.vhdx**.
+ 1. Within the Virtual Machine Connection to MSLab-Mabs VM, launch Windows PowerShell ISE and run the following code to provision the Scale-Out File Server Failover Clustering role:
 
-    > **Note:**: In the value of the `$SoFsName` variable and the Cluster parameter, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+    > **Note:**: In the values of the `$SoFsName` variable and the Cluster parameter, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    ```powershell
    $SoFsName = "ALClus<xx>SoFS"
-if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction SilentlyContinue)) {
-    Add-ClusterScaleOutFileServerRole -Name $SoFsName -Cluster "ALClus<xx>"
-}
+   $ClusterName = "ALClus<xx>"
+   if (-not (Get-ClusterGroup -Name $SoFsName -Cluster $ClusterName -ErrorAction SilentlyContinue)) {
+       Add-ClusterScaleOutFileServerRole -Name $SoFsName -Cluster $ClusterName
+   }
    ```
 
 1. In Windows PowerShell ISE, run the following code to determine the current owner node of the CSV disk hosting the `UserStorage_1` storage path:
 
-   > **Note:**: In the value of the `-Cluster` parameter, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. 
-
    ```powershell
-   $OwnerNode = (Get-ClusterSharedVolume -Name "Cluster Virtual Disk (UserStorage_1)" -Cluster "ALClus<xx>").OwnerNode
+   $OwnerNode = (Get-ClusterSharedVolume -Name "Cluster Virtual Disk (UserStorage_1)" -Cluster $ClusterName).OwnerNode
    ```
 
 1. In Windows PowerShell ISE, run the following code to create a folder named `Images` on the CSV volume hosted by the `UserStorage_1` storage path:
@@ -123,16 +120,19 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction Si
 1. In Windows PowerShell ISE, run the following code to copy the Windows Server 2025 ISO image to the `Images` share:
 
    ```powershell
-   Copy-Item -Path 'C:\Source\Win2025Core_G2.vhdx' -Destination '\\$SoFsName\Images\' -Force
+   Copy-Item -Path 'C:\Source\Win2025Core_G2.vhdx' -Destination "\\$SoFsName\Images\" -Force
    ```
-1. . In the Virtual Machine Connection to MSLab-Mgmt VM, switch to the Microsoft Edge window displaying the Azure portal.
+
+   > **Note:** Wait for the copy to complete. This might take about 3 minutes.
+
+1. In the Virtual Machine Connection to MSLab-Mgmt VM, switch to the Microsoft Edge window displaying the Azure portal.
 1. In the Azure portal, on the **Logical networks** page, in the left navigation menu, in the **Resources** section, select the **VM Images** entry.
 1. On the **VM Images** page, select **+ Add VM Image** and, in the drop-down list, select **Add VM image from a local share**.
 1. On the **Basics** tab of the **Create an image** page, specify the following settings (leave others with their default values):
 
    > **Note:**: In the name of the **Resource group**, replace the **`<username>`** placeholder with the name of the Entra ID user account you are using in this lab.
 
-   > **Note:**: In the custom location name and local file share path, replace the **`<xx>`** placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the custom location name and local file share path, replace the **`<xx>`** placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    |Setting|Value|
    |---|---|
@@ -141,23 +141,23 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction Si
    |Custom location|**ALClus`<xx>`**|
    |OS type|**Windows**|
    |VM generation|**Gen 2**|
-   |Local file share path|**\\\\ALClus`<xx>`SoFS\Images\Win2025Core_G2.vhdx**|
+   |Local file share path|**\\\\ALClus`<xx>`SoFS\\Images\\Win2025Core_G2.vhdx**|
    |Storage path|**Choose automatically**|
 
 1. On the **Basics** tab, select **Review + create** and, on the **Review + create** tab, select **Create**.
 
-   > **Note:** Wait for the deployment tasks to complete. This might take about 20 minutes.
+   > **Note:** Wait for the deployment tasks to complete. This might take about 5 minutes.
 
 ### Task 04: Create an Azure Local VM
 
-1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab.
+1. In the Azure portal, navigate to the **Azure Local** page, on the **Azure Arc \| Azure Local** page, select the **All systems** tab, and then select the **ALClus`<xx>`** entry, where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab.
 1. In the left navigation menu, expand the **Resources** section and select the **Virtual machines** entry.
 1. On the **Virtual machines** page, select **+ Create VM**.
 1. On the **Basics** tab of the **Create an Azure Arc virtual machine** page, specify the following settings (leave others with their default values):
 
    > **Note:**: In the name of the **Resource group**, replace the **`<username>`** placeholder with the name of the Entra ID user account you are using in this lab.
 
-   > **Note:**: In the **Virtual machine name**, replace the **`<xx>`** placeholder with numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the **Virtual machine name**, replace the **`<xx>`** placeholder with numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    |Setting|Value|
    |---|---|
@@ -180,7 +180,7 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction Si
 1. On the **Networking** tab, select **+ Add network interface**.
 1. In the **Add network interface** tab, specify the following settings (leave others with their default values):
 
-   > **Note:**: In the network interface name, replace the **`<xx>`** placeholder with numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the network interface name, replace the **`<xx>`** placeholder with numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    |Setting|Value|
    |---|---|
@@ -193,5 +193,5 @@ if (-not (Get-ClusterGroup -Name $SoFsName -Cluster "ALClus<xx>" -ErrorAction Si
 
    > **Note:** Wait for the deployment tasks to complete. This might take about 5 minutes.
 
-1. Once the deployment completes, select **Go to resource** to navigate to the **ALClus`<xx>`LabVM0** page, where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab.
+1. Once the deployment completes, select **Go to resource** to navigate to the **ALClus`<xx>`LabVM0** page, where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab.
 1. In the vertical menu on the left side, expand the **Settings** section, select **Configuration** and ensure that **Guest management** is enabled.
