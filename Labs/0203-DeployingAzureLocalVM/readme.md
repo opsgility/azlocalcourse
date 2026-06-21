@@ -165,7 +165,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
    |Virtual machine name|**ALClus`<xx>`LabVM0**|
    |Security type|**Standard**|
    |Storage path|**Choose automatically**|
-   |Image|**2025-image-01***|
+   |Image|**2025-image-01**|
    |Virtual processor count|**4**|
    |Memory (MB)|**8192**|
    |Memory type|**Static**|
@@ -191,7 +191,7 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 1. On the **Tags** tab, select **Next**.
 1. On the **Review + create** tab, select **Create**.
 
-   > **Note:** Wait for the deployment tasks to complete. This might take about 5 minutes.
+   > **Note:** Wait for the deployment tasks to complete. This might take about 15 minutes.
 
 1. Once the deployment completes, select **Go to resource** to navigate to the **ALClus`<xx>`LabVM0** page, where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab.
 1. In the vertical menu on the left side, expand the **Settings** section, select **Configuration** and ensure that **Guest management** is enabled.
