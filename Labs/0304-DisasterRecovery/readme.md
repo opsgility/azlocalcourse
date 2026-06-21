@@ -15,8 +15,8 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
 ### Preparation
 
-1. From the Hyper-V Manager on the lab VM, start the MSLab-DC.
-1. Ensure that the OS on MSLab-DC VM is running and then start the MSLab-Mabs, MSLab-ALNode1, and MSLab-ALNode2 VMs.
+1. From the Hyper-V Manager on the lab VM, if needed, start the MSLab-DC.
+1. Ensure that the OS on MSLab-DC VM is running and then, if needed, start the MSLab-Mabs, MSLab-ALNode1, and MSLab-ALNode2 VMs.
 1. Connect to MSLab-Mabs VM by using Virtual Machine Connection (using Enhanced Session and Full Screen Mode).
 1. Sign in by using the following credentials:
 
@@ -29,7 +29,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
 1. In the Virtual Machine Connection to MSLab-Mabs VM, start Microsoft Edge and navigate to [the Azure portal](https://portal.azure.com). Sign in by using the credentials granting you access to the Azure subscription that is used for this lab.
 1. In the Azure portal, search for **Azure Local**.
-1. On the **Azure Arc \| Azure Local** page, select the **All systems** tab and then select the **ALClus`<xx>`** instance (where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab).
+1. On the **Azure Arc \| Azure Local** page, select the **All systems** tab and then select the **ALClus`<xx>`** instance (where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab).
 1. In the vertical menu on the left side, expand the **Operations** section and select **Disaster recovery (preview)**.
 1. On the **Disaster recovery (preview)** page, select **Protect VM workloads**.
 
@@ -41,25 +41,28 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
    > **Note:**: In the name of the **Resource group**, replace the **`<username>`** placeholder with the name of the Entra ID user account you are using in this lab.
 
-   > **Note:**: In the vault name, replace the **`<xx>`** placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the vault name, replace the **`<xx>`** placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    |Setting|Value|
    |---|---|
    |Resource group|**MS-Lab-`<username>`-RG**|
    |Vault name|**ALClus`<xx>`-Asr-RSVault**|
-   |Region|**(Asia Pacific) East Asia**|
+   |Region|**East Asia**|
 
 1. Select **Next: Redundancy**.
 1. On the **Redundancy** tab, set **Backup Storage Redundancy** to **Locally-redundant** and select **Review + create**.
+
+   > **Note:**: Make sure to **NOT** change any of the **Vault properties** settings. In particular, **DO NOT** enable immutability or increase the value of soft delete retention period. 
+
 1. On the **Review + create** tab, select **Create**.
 1. Back on the **Prepare infrastructure** page, next to the **Hyper-V site** text box, select **Create new site**.
-1. In the **Create Hyper-V site** pane, in the **Name** text box, enter **ALClus`<xx>`Site** (where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab) and select **OK**.
+1. In the **Create Hyper-V site** pane, in the **Name** text box, enter **ALClus`<xx>`Site** (where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab) and select **OK**.
 1. Back on the **Prepare infrastructure** page, next to the **Replication policy** text box, select **Create new policy**.
 1. In the **Create replication policy** pane, specify the following settings (leave others with their default values) and select **OK**:
 
    |Setting|Value|
    |---|---|
-   |Name|**LabVM-Policy**|
+   |Name|**MSLab-VM-Policy**|
    |Source type|**Hyper-V**|
    |Target type|**Azure**|
    |Copy frequency|**5 minutes**|
@@ -71,7 +74,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
 1. Back on the **Prepare infrastructure** page, select **Prepare infrastructure**.
 
-   > **Note:** Wait until the **Prepare infrastructure** stage is completed. This might take about 5 minutes. Use the **Refresh** button or review the **Notification** area to track the progress. Once the **Prepare infrastructure** stage is completed, the **Enable replication** button in the **Step 2: Enable replication** section should become enabled.
+   > **Note:** Do not wait until the **Prepare infrastructure** stage is completed but instead procede to the next step. This starge might take about 5 minutes to complete. 
 
    > **Note:** As part of preparing infrastructure, you will also create a virtual network in Azure, which will provide networking functionality in a disaster recovery scenario and an Azure storage account to provide caching for replication.
 
@@ -81,23 +84,23 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
    > **Note:**: In the name of the **Resource group**, replace the **`<username>`** placeholder with the name of the Entra ID user account you are using in this lab.
 
-   > **Note:**: In the virtual network name, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the virtual network name, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    |Setting|Value|
    |---|---|
    |Resource group|**MS-Lab-`<username>`-RG**|
-   |Virtual network name|**AlClus`<xx>`-DR-VNet**|
+   |Virtual network name|**AlClus`<xx>`-dr-vnet**|
    |Region|**(Asia Pacific) East Asia**|
 
 1. On the **Security** tab, accept the default settings and select **Next**.
-1. On the **Address space** tab, set the virtual network address space to **172.16.0.0/20** and change the default subnet to **subnet0** with the IP address range of **172.16.0.0/24**. Clear the checkbox **Enable private subnet (no default outbound access)** and select **Review + create**.
+1. On the **Address space** tab, set the virtual network address space to **172.16.2`<xx>`.0/24** and change the default subnet to **subnet0** with the IP address range of **172.16.2`<xx>`.0/25** (where the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`). Clear the checkbox **Enable private subnet (no default outbound access)**, save the change, and select **Review + create**.
 1. On the **Review + create** tab, select **Create**.
 
    > **Note:** Do not wait for the resource provisioning to complete but proceed to the next step. The provisioning should take less than 1 minute.
 
 1. From the same web browser tab, navigate to the **Storage accounts** page in the Azure portal.
 1. On the **Storage accounts** page, select **+ Create**.
-1. On the **Basics** tab of the **Create virtual network** page, specify the following settings (leave others with their default values) and select **Next**:
+1. On the **Basics** tab of the **Create a storage account** page, specify the following settings (leave others with their default values) and select **Next**:
 
    > **Note:**: In the name of the **Resource group**, replace the **`<username>`** placeholder with the name of the Entra ID user account you are using in this lab.
 
@@ -112,7 +115,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
 1. On the **Advanced** tab, accept the default settings and select **Next**.
 1. On the **Networking** tab, accept the default settings and select **Next**.
-1. On the **Data protection** tab, accept the default settings and select **Next**.
+1. On the **Data protection** tab, clear the checkboxes **Enable soft delete for blobs**, **Enable soft delete for containers**, and **Enable soft delete for classic file shares**, and then select **Next**.
 1. On the **Security** tab, ensure that the checkbox **Enable storage account key access** is enabled and select **Review + create**.
 1. On the **Review + create** tab, select **Create**.
 
@@ -120,24 +123,28 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
 
 ### Task 02: Enable replication of Azure Local VMs
 
-1. In the web browser displaying the Azure portal, on the **Prepare infrastructure** page, in the **Step 2: Enable replication** section, select the **Enable replication** button.
+1. In the web browser displaying the Azure portal, switch back to the **Prepare infrastructure** page.
 
-   > **Note:** Your web browser should be automatically redirected to the **ALClus`<xx>`-Asr-RSVault \| Replicated items** page (where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab).
+   > **Note:** Use the **Refresh** button or review the **Notification** area to review the progress of the **Prepare infrastructure** stage. Once this stage is completed, the **Enable replication** button in the **Step 2: Enable replication** section should become enabled.
+
+1. In the **Step 2: Enable replication** section, select the **Enable replication** button.
+
+   > **Note:** Your web browser should be automatically redirected to the **ALClus`<xx>`-Asr-RSVault \| Replicated items** page (where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab).
 
 1. On the **Replicated items** page, select **+ Replicate** and, in the drop-down menu, select **Hyper-V machines to Azure**.
-1. On the **Source environment** tab of the **Enable replication** page, ensure that **ALClus`<xx>`Site** (where the **`<xx>`** placeholder designates the numeric values assigned to the name of the Entra ID user account you are using in this lab) appears in the **Source location** drop-down list and then select **Next**.
+1. On the **Source environment** tab of the **Enable replication** page, ensure that **ALClus`<xx>`Site** (where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab) appears in the **Source location** drop-down list and then select **Next**.
 1. On the **Target environment** tab, specify the following settings (leave others with their default values) and select **Next**:
 
    > **Note:**: In the name of the post-failover resource group, replace the **`<username>`** placeholder with the name of the Entra ID user account you are using in this lab.
 
-   > **Note:**: In the name of the virtual network, replace the **`<xx>`** placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the name of the virtual network, replace the **`<xx>`** placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    |Setting|Value|
    |---|---|
    |Post-failover resource group|**MS-Lab-`<username>`-RG**|
    |Replica Storage type|**Managed disk**|
    |Network|**Configure now for selected machines**|
-   |Virtual network|**AlClus`<xx>`-DR-VNet**|
+   |Virtual network|**AlClus`<xx>`-dr-vnet**|
    |Subnet|**subnet0**|
 
 1. On the **Virtual machine selection** tab, select the checkbox next to **ALClus01VM0** and select **Next**.
@@ -150,7 +157,7 @@ In this lab you will learn how to protect Windows and Linux-based workloads host
    |Managed disk type|**Standard HDD**|
    |Cache storage account|the name of the storage account you created in the previous task|
 
-1. On the **Replication policy** tab, accept the default settings defined by the **LabVM-Policy** and select **Next**.
+1. On the **Replication policy** tab, accept the default settings defined by the **MSLab-VM-Policy** and select **Next**.
 1. On the **Review** tab, select **Enable replication**.
 
    ![](./media/0304-02-enablereplication.png)
