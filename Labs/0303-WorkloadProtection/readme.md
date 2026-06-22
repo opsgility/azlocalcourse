@@ -129,7 +129,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 1. On the **Virtual machines** page, select the **mslab-vm`<xx>`** entry (where the **`<xx>`** placeholder represents the numeric value assigned to the name of the Entra ID user account you are using in this lab). 
 1. On the virtual machine page, in the vertical menu on the left side, expand the **Settings** section and then select **Disks**.
 1. In the **Data disks** section, select **+ Create and attach a new disk**.
-1. In the **2** LUN row, specify the following settings (leave others with their defalts) and then select **Apply**.
+1. In the row representing the newly added disk, specify the following settings (leave others with their defalts) and then select **Apply**.
 
    > **Note:**: In the disk name, replace the **`<xx>`** placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
@@ -144,7 +144,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 
 1. While connected to the lab VM, switch to **Server Manager**.
 1. In **Server Manager**, in the vertical menu on the left side, select **File and Storage Services** and then select **Disks**.
-1. In the list of disks attached to the lab VM, right-click disk number 3, which at this point, should be listed with the **Unknown** partition, in the context-sensitive menu, select **Initialize** and select **Yes** when prompted whether to proceed.
+1. In the list of disks attached to the lab VM, right-click the disk entry listed with the **Unknown** partition, in the context-sensitive menu, select **Initialize** and select **Yes** when prompted whether to proceed.
 1. Right-click the same disk again and, in the context-sensitive menu, select **New Volume** to launch **New Volume Wizard**.
 1. On the **Select the server and disk** tab, accept the default settings and select **Next >**.
 1. On the **Select the size of the volume** tab, accept the default size (512 GB) and select **Next >**.

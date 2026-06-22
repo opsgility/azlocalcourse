@@ -21,11 +21,11 @@ $LabConfig=@{AllowedVLANs="1-10,711-719" ; DomainAdminName='LabAdmin'; AdminPass
 #S2D Nodes (nested virt)
 #1..2 | ForEach-Object {$LABConfig.VMs += @{ VMName="S2D$_" ; Configuration='S2D' ; ParentVHD='Win2025Core_G2.vhdx' ; HDDNumber=4 ; HDDSize=2TB ; MemoryStartupBytes=8GB ; VMProcessorCount=4 ; vTPM=$true ; NestedVirt=$true}}
 
-#Management machine
-$LabConfig.VMs += @{ VMName = 'Management' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1 ; AddToolsVHD=$True }
+#DC
+$LabConfig.VMs += @{ VMName='DC' ; ParentVHD='Win2025_G2.vhdx' ; MemoryStartupBytes=8GB }
 
-#Windows Admin Center in GW mode
-$LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTNICs=1}
+#Management machine
+$LabConfig.VMs += @{ VMName = 'Management' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1 ; AddToolsVHD=$True ; MemoryStartupBytes=8GB}
 ```
 
 ## The lab
@@ -33,19 +33,39 @@ $LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTN
 ### Preparation
 
 1. While signed in to the lab VM, launch Microsoft Edge, on the web browser page, navigate to the Azure portal at [https://portal.azure.com](https://portal.azure.com), and sign in using the Entra ID credentials you are using in this lab.
-1. In the Azure portal, navigate to the **Disks** page and create a **Premium SSD** data disk of **512 GB** in size in the **East Asia** Azure region in the **MS-Lab-`<username>`-RG** resource group (where the **<username>** placeholder designaes the name of the Entra ID user account you are using in this lab).
-1. In the Azure portal, navigate to the page of your lab VM (you will find it in the same resource group) and attach the newly created disk to it. 
-1. In the lab VM, use Server Manager to initialize the newly attached disk as **GPT**, format it by using **NTFS** file system, and assign to it the drive letter **W:**.
-1. Copy the following content from the `F:\MSLab` directory to `W:\MSLab2025\` directory (you'll need to create the target directory first):
+1. In the Azure portal, navigate to the **Virtual machines** page.
+1. On the **Virtual machines** page, select the **mslab-vm`<xx>`** entry (where the **`<xx>`** placeholder represents the numeric value assigned to the name of the Entra ID user account you are using in this lab). 
+1. On the virtual machine page, in the vertical menu on the left side, expand the **Settings** section and then select **Disks**.
+1. In the **Data disks** section, select **+ Create and attach a new disk**.
+1. In the row representing the newly added disk, specify the following settings (leave others with their defalts) and then select **Apply**.
+
+   > **Note:**: In the disk name, replace the **`<xx>`** placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+
+   |Setting|Value|
+   |---|---|
+   |Disk name|**mslab-vm`<xx>`_DataDisk_3**|
+   |Storage type|**Premium_SSD_LRS**|
+   |Size (GiB)|**512**|
+   |Host caching|**Read-only**|
+
+1. While connected to the lab VM, switch to **Server Manager**.
+1. In **Server Manager**, in the vertical menu on the left side, select **File and Storage Services** and then select **Disks**.
+1. In the list of disks attached to the lab VM, right-click the disk entry listed with the **Unknown** partition, in the context-sensitive menu, select **Initialize** and select **Yes** when prompted whether to proceed.
+1. Right-click the same disk again and, in the context-sensitive menu, select **New Volume** to launch **New Volume Wizard**.
+1. On the **Select the server and disk** tab, accept the default settings and select **Next >**.
+1. On the **Select the size of the volume** tab, accept the default size (512 GB) and select **Next >**.
+1. On the **Assign to a drive letter or folder** tab, select the drive letter **S** and then select **Next >**.
+1. On the **Select file system settings** tab, ensure that the file system is set to **ReFS**, keep the **Allocation unit size** set to **Default**, in the **Volume label** text box, enter **MSLab2025** and select **Next >**.
+1. On the **Confirmation** tab, select **Create** and then select **Close**.
+1. Open File Explorer and copy the following content from the `F:\MSLab` directory to `S:\MSLab2025\` directory (you'll need to create the target directory first):
 
    - 1_Prereq.ps1
    - 2_CreateParentDisks.ps1
    - 3_Deploy.ps1
-   - 4_TimeSync.ps1
    - Cleanup.ps1
    - LabConfig.ps1
 
-1. Copy the following content from the `F:\MSLab\ParentDisks` directory to `W:\MSLab2025\ParentDisks` directory (you'll need to create the target directory first):
+1. Copy the following content from the `F:\MSLab\ParentDisks` directory to `S:\MSLab2025\ParentDisks` directory (you'll need to create the target directory first):
 
    - Convert-WindowsImage.ps1
    - CreateParentDisk.ps1
@@ -56,63 +76,48 @@ $LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTN
    - Win2025Core_G2.vhdx
    - Win2025_G2.vhdx
 
-1. Replace the content of the `W:\MSLab2025\LabConfig.ps` file with the following code:
+1. Replace the content of the `S:\MSLab2025\LabConfig.ps` file with the following code:
 
-```powershell
-$LabConfig=@{AllowedVLANs="1-10,711-719" ; DomainAdminName='LabAdmin'; AdminPassword='Demo@pass12345' ; DCEdition='4'; Internet=$true ; AdditionalNetworksConfig=@(); VMs=@()}
+   ```powershell
+   $LabConfig=@{AllowedVLANs="1-10,711-719" ; DomainAdminName='LabAdmin'; AdminPassword='Demo@pass12345' ; DCEdition='4'; Internet=$true ; AdditionalNetworksConfig=@(); VMs=@()}
 
-#S2D Nodes
-1..2 | ForEach-Object {$LABConfig.VMs += @{ VMName="S2D$_" ; Configuration='S2D' ; ParentVHD='Win2025Core_G2.vhdx' ; HDDNumber=4 ; HDDSize=2TB ; MemoryStartupBytes=1GB; VMProcessorCount=4 ; vTPM=$true}}
+   #S2D Nodes
+   1..2 | ForEach-Object {$LABConfig.VMs += @{ VMName="S2D$_" ; Configuration='S2D' ; ParentVHD='Win2025Core_G2.vhdx' ; HDDNumber=4 ; HDDSize=2TB ; MemoryStartupBytes=1GB; VMProcessorCount=4 ; vTPM=$true}}
 
-#S2D Nodes (nested virt)
-#1..2 | ForEach-Object {$LABConfig.VMs += @{ VMName="S2D$_" ; Configuration='S2D' ; ParentVHD='Win2025Core_G2.vhdx' ; HDDNumber=4 ; HDDSize=2TB ; MemoryStartupBytes=8GB ; VMProcessorCount=4 ; vTPM=$true ; NestedVirt=$true}}
+   #S2D Nodes (nested virt)
+   #1..2 | ForEach-Object {$LABConfig.VMs += @{ VMName="S2D$_" ; Configuration='S2D' ; ParentVHD='Win2025Core_G2.vhdx' ; HDDNumber=4 ; HDDSize=2TB ; MemoryStartupBytes=8GB ; VMProcessorCount=4 ; vTPM=$true ; NestedVirt=$true}}
 
-#Management machine
-$LabConfig.VMs += @{ VMName = 'Management' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1 ; AddToolsVHD=$True }
+   #DC
+   $LabConfig.VMs += @{ VMName='DC' ; ParentVHD='Win2025_G2.vhdx' ; MemoryStartupBytes=8GB }
 
-#Windows Admin Center in GW mode
-$LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTNICs=1}
-```
+   #Management machine
+   $LabConfig.VMs += @{ VMName = 'Management' ; ParentVHD = 'Win2025_G2.vhdx'; MGMTNICs=1 ; AddToolsVHD=$True ; MemoryStartupBytes=8GB}
+   ```
 
-1. Launch Windows PowerShell ISE, open `W:\MSLab2025\1_Prereq.ps1`, and run it.
+1. Launch Windows PowerShell ISE, open `S:\MSLab2025\1_Prereq.ps1`, and run it.
 
    > **Note:** Wait for the script execution to complete. This might take about 2 minutes.
 
-1. From the same Windows PowerShell ISE window, open `W:\MSLab2025\2_CreateParentDisks.ps1`, and run it.
+1. From the same Windows PowerShell ISE window, open `S:\MSLab2025\2_CreateParentDisks.ps1`, and run it.
+
+   > **Note:** When prompted to choose a telemetry level, select **None**.
 
    > **Note:** When prompted to provide the location of the ISO file for the parent disk, point to `C:\Source\26100.32230.260111-0550.lt_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso`
 
    > **Note:** When prompted to provide the location of the corresponding MSU file, select **Cancel**.
 
-   > **Note:** Wait for the script execution to complete. This might take about 20 minutes.
+   > **Note:** Wait for the script execution to complete. This might take about 40 minutes.
 
-1. From the same Windows PowerShell ISE window, open `W:\MSLab2025\ParentDisks\CreateParentDisk.ps1`, and run it.
+   > **Note:** When prompted whether to clean up unnecessary files and folders, select **No**.
 
-   > **Note:** When prompted to provide the location of the ISO file for the parent disk, point to `C:\Source\26100.32230.260111-0550.lt_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso`
+1. From the same Windows PowerShell ISE window, open `S:\MSLab2025\3_Deploy.ps1`, and run it.
 
-   > **Note:** When prompted to provide the location of the corresponding MSU file, select **Cancel**.
-
-    **Note:** When prompted to choose the operating system, select **Windows Server 2026 Datacenter Edition**.
-
-    **Note:** When prompted to specify the name of the disk and its size, accept the default values by pressing the **Enter** key.
-
-   > **Note:** Wait for the script execution to complete. This might take about 5 minutes.
-
-1. From the same Windows PowerShell ISE window, open `W:\MSLab2025\3_Deploy.ps1`, and run it.
+   > **Note:** When prompted to choose a telemetry level, select **None**.
 
    > **Note:** Wait for the script execution to complete. This might take about 10 minutes.
 
-1. When prompted whether to start lab virtual machines, select **No**.
+1. When prompted whether to start lab virtual machines, select **All**.
 1. Launch the Hyper-V Manager console.
-1. In the Hyper-V Manager console, select the **MSLab2025-Management** VM, display its **Settings** window, and adjust its **Memory** configuration by applying the following settings (leave others with their default values):
-
-   |Setting|Value|
-   |---|---|
-   |RAM|**4096**|
-   |Minimum RAM|**2048**|
-   |Maximum RAM|**8192**|
-
-1. From the Hyper-V Manager console, start the **MSLab2025-Management**, **MSLab2025-S2D1** and **MSLab2025-S2D2** VMs.
 1. Review the results:
 
    ![](./media/0204-01-initialsetup.png)
@@ -127,7 +132,7 @@ $LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTN
 
 ### Task 01: Explore the lab environment
 
-1. Once you signed in, within the Virtual Machine Connection session, in Server Manager, right-click on **All Servers** and select Add Servers (all servers are domain joined and S2D1 and S2D2 have multiple NICs).
+1. Once you signed in, within the Virtual Machine Connection session, in Server Manager, right-click on **All Servers**, select **Add Servers**, from the **Active Directory** tab, select **Find Now**, and add all servers (all servers are domain joined and S2D1 and S2D2 have multiple NICs).
 
    ![](./media/0204-02-addallservers.png)
 
@@ -143,7 +148,7 @@ $LabConfig.VMs += @{ VMName = 'WACGW' ; ParentVHD = 'Win2025Core_G2.vhdx'; MGMTN
    #Install features for management
    Install-WindowsFeature -Name NetworkATC,RSAT-Clustering,RSAT-Clustering-Mgmt,RSAT-Clustering-PowerShell,RSAT-Hyper-V-Tools,RSAT-Feature-Tools-BitLocker-BdeAducExt,RSAT-AD-PowerShell,RSAT-AD-AdminCenter,RSAT-DHCP,RSAT-DNS-Server
    ```
-1. From the Administrator: Windows PowerShell ISE window, run the following code to install required roles and features on the **S2D1** and **S2D2** servers:
+1. From the **Administrator: Windows PowerShell ISE** window, run the following code to install required roles and features on the **S2D1** and **S2D2** servers:
 
    ```powershell
    #Servers list
