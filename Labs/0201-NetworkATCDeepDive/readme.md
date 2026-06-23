@@ -30,7 +30,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
    > **Note:**: Network ATC is available in Windows Server 2025 (which the MSLab-Mgmt VM is running) as an installable feature.
 
-   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    ```powershell
    #Install the Network ATC feature
@@ -59,7 +59,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
 > **Note:**: Network Intent can be two types: Cluster and Server, so you can apply it to individual servers or the entire cluster. There is a corresponding service that applies the configuration and you can learn about its status by using Event Viewer. There are also numerous settings that Network ATC can configure.
 
-> **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+> **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
 1. From Windows PowerShell ISE, run the following code:
 
@@ -300,7 +300,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
 1. From Windows PowerShell ISE, run the following code:
 
-   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    ```powershell
    $ClusterName="ALClus<xx>"
@@ -336,7 +336,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
 1. From Windows PowerShell ISE, run the following code:
 
-   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    ```powershell
    $ClusterName="ALClus<xx>"
@@ -373,7 +373,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
 1. From Windows PowerShell ISE, run the following code:
 
-   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    ```powershell
    $ClusterName="ALClus<xx>"
@@ -455,8 +455,8 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
 1. From the Windows Admin Center landing page, select **+ Add** followed by **+ Add manually**. 
 1. In the **Add or create resources** pane, in the **Server clusters** section, select **Add**.
-1. On the **Add cluster** tab, in the **Cluster name** text box, enter **ALClus`<xx>`.corp.contoso.com** (in the name of the cluster, replace the **`<xx>`** placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab) and select **Add**.
-1. Back on the Windows Admin Center landing page, select the **alclus`<xx>`.corp.contoso.com** link (where the **`<xx>`** represents the numeric values assigned to the name of the Entra ID user account you are using in this lab).
+1. On the **Add cluster** tab, in the **Cluster name** text box, enter **ALClus`<xx>`.corp.contoso.com** (in the name of the cluster, replace the **`<xx>`** placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab) and select **Add**.
+1. Back on the Windows Admin Center landing page, select the **alclus`<xx>`.corp.contoso.com** link (where the **`<xx>`** represents the numeric value assigned to the name of the Entra ID user account you are using in this lab).
 1. In the vertical menu on the left side, select **Network ATC intents**.
 1. Review the configuration of the **compute_management_storage** intent.
 1. In the vertical menu on the left side, select **Network ATC cluster settings**.
@@ -468,7 +468,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
 1. From Windows PowerShell ISE, run the following code:
 
-   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    ```powershell
    $ClusterName="ALClus<xx>"
@@ -514,7 +514,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
    ```powershell
    # Remove the existing intent
-   Remove-NetIntent -Name "compute_management_storage" -ClusterName $ClusterName -Confirm:$false
+   Remove-NetIntent -Name "compute_management_storage" -ClusterName $ClusterName
 
    # Create an adapter property override to disable RDMA
    $AdapterOverride = New-NetIntentAdapterPropertyOverrides
@@ -540,7 +540,7 @@ In this lab, you will explore Network ATC on Azure Local by using PowerShell to 
 
 1. From Windows PowerShell ISE, run the following code:
 
-   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric values assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
+   > **Note:**: In the name of the cluster, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
    ```powershell
    $ClusterName="ALClus<xx>"
