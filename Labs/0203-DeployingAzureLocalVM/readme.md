@@ -71,8 +71,8 @@ In this lab, you will deploy an Azure Local VM by using the Azure portal.
 
  > **Note:** In case you run into issues with the Azure Marketplace image download, use the following procedure instead.
 
- 1. In the Virtual Machine Connection to MSLab-Mabs VM, launch File Explorer and verify that the  C:\Source folder contains the file **Win2025Core_G2.vhdx**.
- 1. Within the Virtual Machine Connection to MSLab-Mabs VM, launch Windows PowerShell ISE and run the following code to provision the Scale-Out File Server Failover Clustering role:
+ 1. In the Virtual Machine Connection to MSLab-Mgmt VM, launch File Explorer and verify that the  C:\Source folder contains the file **Win2025Core_G2.vhdx**.
+ 1. Within the Virtual Machine Connection to MSLab-Mgmt VM, launch Windows PowerShell ISE and run the following code to provision the Scale-Out File Server Failover Clustering role:
 
     > **Note:**: In the values of the `$SoFsName` variable and the Cluster parameter, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
