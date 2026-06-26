@@ -120,7 +120,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 
    ![](./media/0303-02-mabssetupcomplete.png)
 
-1. Restart the operating system following the installation. This will automatically close the Virtual Machine Connection to MSLab-Mgmt VM.
+1. Restart the operating system following the installation. This will automatically close the Virtual Machine Connection to MSLab-Mabs VM.
 
 ### Task 03: Configure MABS storage
 
@@ -196,7 +196,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 
 > **Note:** In order to protect Azure Local VMs, you need to install the MABS agent on the Azure Local cluster nodes. However, this requires changes to Defender Application Control running on the nodes, since, by default, it will block the agent installation. While you could configure code integrity policies to permit execution of the required binaries, for the sake of simplicitly, you will temporarily switch from the enforced to audit mode instead. To manage Application Control from MABS, you will also need to enable CredSSP.
 
-1. In the Virtual Machine Connection to MSLab-Mgmt VM, launch Windows PowerShell ISE and run the following code to switch from the enforced to audit mode of Application Control.
+1. In the Virtual Machine Connection to MSLab-Mabs VM, launch Windows PowerShell ISE and run the following code to switch from the enforced to audit mode of Application Control.
 
    > **Note:**: In the value of the `$ClusterName` variable, replace the `<xx>` placeholder with the numeric value assigned to the name of the Entra ID user account you are using in this lab. For example, if your user name is `aluser01`, use `01`. 
 
@@ -253,7 +253,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 
    > **Note:** By default, push installation will fail due to firewall restrictions. As a workaround, you will install the agent manually on the target nodes.
 
-1. Switch back from the Virtual Machine Connection to MSLab-Mgmt to the lab VM. 
+1. Switch back from the Virtual Machine Connection to MSLab-Mabs to the lab VM. 
 1. From the lab VM, open the Virtual Machine Connection to MSLab-ALNode1 VM. 
 1. Sign in by using the following credentials:
 
@@ -269,8 +269,23 @@ In this lab you will learn about backup of Azure Local environment by using Micr
    Copy-Item -Path '\\MABS\C$\Program Files\Microsoft Azure Backup Server V4\DPM\DPM\ProtectionAgents\RA\14.0.30.0\amd64\DPMAgentInstaller_x64.exe'
    .\DPMAgentInstaller_x64.exe /q MABS.corp.contoso.com /IAcceptEULA   
    ```
+1. From the lab VM, open the Virtual Machine Connection to MSLab-ALNode2 VM. 
+1. Sign in by using the following credentials:
 
-1. Switch back to the Virtual Machine Connection to MSLab-Mgmt VM.
+   - Username: *CORP\LabAdmin*
+   - Password: *Demo@pass12345*
+
+1. In the **SConfig** menu, enter **15** to **Exit to the command line (PowerShell)**.
+1. From the PowerShell prompt, run the following commands:
+
+   ```powershell
+   New-Item -ItemType Directory -Path 'C:\Temp'
+   Set-Location -Path 'C:\Temp'
+   Copy-Item -Path '\\MABS\C$\Program Files\Microsoft Azure Backup Server V4\DPM\DPM\ProtectionAgents\RA\14.0.30.0\amd64\DPMAgentInstaller_x64.exe'
+   .\DPMAgentInstaller_x64.exe /q MABS.corp.contoso.com /IAcceptEULA   
+   ```
+
+1. Switch back to the Virtual Machine Connection to MSLab-Mabs VM.
 1. In the Microsoft Azure Backup Server console, in the verical menu on the left side, ensure that the **Management** workspace is selected, select the **Production Servers** link, and then, in the toolbar, select **Add**.
 
    > **Note:** This will launch **Production Server Additon Wizard**.
