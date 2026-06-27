@@ -40,7 +40,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
    |Setting|Value|
    |---|---|
    |Resource group|**MS-Lab-`<username>`-RG**|
-   |Vault name|**ALClus`<xx>`-Bpk-RSVault**|
+   |Vault name|**ALClus`<xx>`-Bkp-RSVault**|
    |Region|**(Asia Pacific) East Asia**|
 
 1. Select **Next: Redundancy**.
@@ -52,7 +52,7 @@ In this lab you will learn about backup of Azure Local environment by using Micr
 
    > **Note:** Wait for the resource provisioning to complete. This should take about 2 minutes.
 
-1. Once the vault is provisioned, select **Go to resource** to navigate to the **ALClus`<xx>`-Bpk-RSVault** page (where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab).
+1. Once the vault is provisioned, select **Go to resource** to navigate to the **ALClus`<xx>`-Bkp-RSVault** page (where the **`<xx>`** placeholder designates the numeric value assigned to the name of the Entra ID user account you are using in this lab).
 1. On the **Overview** tab, select **+ Backup**.
 1. On the **Backup Goal** page, specify the following settings:
 
